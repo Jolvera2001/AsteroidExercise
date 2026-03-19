@@ -13,6 +13,9 @@ namespace AsteroidsExercise.Scenes;
 public class GameplayScreen : BaseScreen
 {
     private readonly List<IGameObject> _gameObjects = new();
+    private readonly List<IGameObject> _pendingObjectsAdd = new();
+    private readonly List<IGameObject> _pendingObjectsRemove = new();
+
 
     public GameplayScreen(Game game) : base(game)
     {
@@ -31,6 +34,10 @@ public class GameplayScreen : BaseScreen
     {
         foreach (var gameObject in _gameObjects) gameObject.Update(gameTime);
         _gameObjects.RemoveAll(o => o is Entity entity && entity.IsExpired);
+
+        foreach (var entity in _pendingObjectsAdd) _gameObjects.Add(entity);
+
+        _pendingObjectsAdd.Clear();
     }
 
     public override void Draw(GameTime gameTime)
@@ -44,6 +51,6 @@ public class GameplayScreen : BaseScreen
 
     private void OnShoot(ShipShoot eventArgs)
     {
-        _gameObjects.Add(new Bullet(GetAtlasRegion("sprites", "bullet"), eventArgs.position, eventArgs.direction));
+        _pendingObjectsAdd.Add(new Bullet(GetAtlasRegion("sprites", "bullet"), eventArgs.position, eventArgs.direction));
     }
 }

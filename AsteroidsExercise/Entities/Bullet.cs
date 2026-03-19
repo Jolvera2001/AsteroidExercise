@@ -1,3 +1,4 @@
+using System;
 using IE_Lib;
 using IE_Lib.Abstracts;
 using IE_Lib.Utils;
@@ -27,7 +28,6 @@ public class Bullet : Entity
         base.Update(gameTime);
         ApplyVelocity(gameTime);
         CheckBounds();
-        
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -47,6 +47,7 @@ public class Bullet : Entity
         if (!Position.IsInBounds(Core.Instance.Window.ClientBounds.Width, Core.Instance.Window.ClientBounds.Width))
         {
             IsExpired = true;
+            Console.WriteLine("Disappeared!");
         }
     }
 }
