@@ -14,7 +14,10 @@ public class GameplayScreen : BaseScreen
 {
     private readonly List<IGameObject> _gameObjects = new();
 
-    public GameplayScreen(Game game) : base(game) { }
+    public GameplayScreen(Game game) : base(game)
+    {
+        Core.EventBus.Listen<ShipShoot>(OnShoot);
+    }
 
     protected override void LoadAssets()
     {
@@ -37,5 +40,10 @@ public class GameplayScreen : BaseScreen
         Core.SpriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    private void OnShoot(ShipShoot eventArgs)
+    {
+        _gameObjects.Add(new Bullet(GetAtlasRegion("sprites", "bullet"), eventArgs.position, eventArgs.direction));
     }
 }

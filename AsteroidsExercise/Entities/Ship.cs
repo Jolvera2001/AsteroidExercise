@@ -1,6 +1,6 @@
-using System;
 using IE_Lib;
 using IE_Lib.Abstracts;
+using IE_Lib.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -44,12 +44,12 @@ public class Ship : Entity
 
         if (_input.Keyboard.IsKeyDown(Keys.W) || _input.Keyboard.IsKeyDown(Keys.Up))
         {
-            Velocity += GetDirection() * THRUST_SPEED * delta;
+            Velocity += Orientation.ToDirection() * THRUST_SPEED * delta;
         }
 
         if (_input.Keyboard.IsKeyDown(Keys.S) || _input.Keyboard.IsKeyDown(Keys.Down))
         {
-            Velocity -= GetDirection() * THRUST_SPEED * delta;
+            Velocity -= Orientation.ToDirection() * THRUST_SPEED * delta;
         }
         
         if (_input.Keyboard.IsKeyDown(Keys.A) || _input.Keyboard.IsKeyDown(Keys.Left))
@@ -61,6 +61,11 @@ public class Ship : Entity
         {
             Orientation += ROTATION_SPEED * delta;
         }
+
+        if (_input.Keyboard.IsKeyDown(Keys.Space))
+        {
+            Core.EventBus.Raise(new ShipShoot(Position, Orientation.ToDirection()));
+        }
     }
 
     private void ApplyVelocity(GameTime gameTime)
@@ -69,12 +74,8 @@ public class Ship : Entity
         Position.X += (float)(Velocity.X * delta);
         Position.Y += (float)(Velocity.Y * delta);
 
-        if (Velocity.Length() > MAX_SPEED) Velocity = Vector2.Normalize(Velocity) * MAX_SPEED;
-    }
-
-    private Vector2 GetDirection()
-    {
-        float angleRadians = Orientation - MathHelper.PiOver2;
-        return new Vector2(MathF.Cos(angleRadians), MathF.Sin(angleRadians));
+        Velocity = Velocity.Clamp(MAX_SPEED);
     }
 }
+
+public record ShipShoot(Vector2 position, Vector2 direction);
