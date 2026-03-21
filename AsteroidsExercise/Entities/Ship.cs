@@ -12,11 +12,11 @@ public record Spawn(Entity Entity);
 public class Ship : Entity
 {
     const float RotationSpeed = 5.25f;
-    const float ThrustSpeed = 62.0f;
+    const float ThrustSpeed = 67.5f;
     const float MaxSpeed = 150.0f;
 
     private InputManager _input;
-    private Texture2DRegion _bulletTextureCache;
+    private readonly Texture2DRegion _bulletTextureCache;
 
     public Ship(Texture2DRegion shipRegion, Texture2DRegion bulletRegion)
     {

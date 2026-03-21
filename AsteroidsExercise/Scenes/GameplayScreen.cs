@@ -8,15 +8,12 @@ using Microsoft.Xna.Framework;
 
 namespace AsteroidsExercise.Scenes;
 
-public record SpawnRequest(Entity Entity);
-
 public class GameplayScreen : BaseScreen
 {
     private readonly List<IGameObject> _gameObjects = new();
     private readonly List<IGameObject> _pendingObjectsAdd = new();
-    private readonly List<IGameObject> _pendingObjectsRemove = new();
 
-    protected override bool UseDockedLayout => true;
+    protected override bool UseDockedLayout => false;
 
     public GameplayScreen(Game game) : base(game)
     {
