@@ -6,15 +6,8 @@ using MonoGame.Extended.Graphics;
 
 namespace AsteroidsExercise.Scenes;
 
-public class MainMenuScreen : BaseScreen
+public class MainMenuScreen(Game game) : BaseScreen(game)
 {
-    private Texture2DAtlas _atlas;
-
-    public MainMenuScreen(Game game) : base(game)
-    {
-
-    }
-
     public override void Update(GameTime gameTime)
     {
         throw new NotImplementedException();
@@ -23,5 +16,10 @@ public class MainMenuScreen : BaseScreen
     protected override void LoadAssets()
     {
         
+    }
+
+    protected override void OnUnload()
+    {
+        throw new NotImplementedException();
     }
 }

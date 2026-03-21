@@ -3,14 +3,13 @@ using IE_Lib;
 using IE_Lib.Abstracts;
 using IE_Lib.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 
 namespace AsteroidsExercise.Entities;
 
 public class Bullet : Entity
 {
-    const float SPEED = 175.0f;
+    const float Speed = 250.0f;
 
     public Bullet(Texture2DRegion bulletRegion, Vector2 startPosition, Vector2 direction)
     {
@@ -20,7 +19,7 @@ public class Bullet : Entity
         };
 
         Position = startPosition;
-        Velocity = direction * SPEED;
+        Velocity = direction * Speed;
     }
 
     public override void Update(GameTime gameTime)
@@ -30,16 +29,11 @@ public class Bullet : Entity
         CheckBounds();
     }
 
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-        base.Draw(gameTime, spriteBatch);
-    }
-
     private void ApplyVelocity(GameTime gameTime)
     {
-        var delta = gameTime.ElapsedGameTime.Seconds;
-        Position.X += Velocity.X * delta;
-        Position.Y += Velocity.Y * delta; 
+        var delta = gameTime.ElapsedGameTime.TotalSeconds;
+        Position.X += (float)(Velocity.X * delta);
+        Position.Y += (float)(Velocity.Y * delta); 
     }
 
     private void CheckBounds()

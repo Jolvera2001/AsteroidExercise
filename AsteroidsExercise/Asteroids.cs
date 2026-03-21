@@ -1,5 +1,6 @@
 ﻿using AsteroidsExercise.Scenes;
 using IE_Lib;
+using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.ImGuiNet;
@@ -21,6 +22,7 @@ public class Asteroids : Core
 #if DEBUG
         ImGuiRenderer = new ImGuiRenderer(this);
         ImGuiRenderer.RebuildFontAtlas();
+        ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 #endif
     }
 

@@ -21,7 +21,6 @@
     <ProjectReference Include="C:\Users\admin\RiderProjects\Project IE\IE_Lib\IE_Lib.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="Scenes\" />
   </ItemGroup>
   <ItemGroup>

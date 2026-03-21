@@ -1,14 +1,14 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using AsteroidsExercise.Entities;
 using IE_Lib;
 using IE_Lib.Abstracts;
 using IE_Lib.interfaces;
+using ImGuiNET;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.Graphics;
 
 namespace AsteroidsExercise.Scenes;
+
+public record SpawnRequest(Entity Entity);
 
 public class GameplayScreen : BaseScreen
 {
@@ -16,27 +16,41 @@ public class GameplayScreen : BaseScreen
     private readonly List<IGameObject> _pendingObjectsAdd = new();
     private readonly List<IGameObject> _pendingObjectsRemove = new();
 
+    protected override bool UseDockedLayout => true;
 
     public GameplayScreen(Game game) : base(game)
     {
-        Core.EventBus.Listen<ShipShoot>(OnShoot);
+        Core.EventBus.Listen<Spawn>(OnShoot);
+    }
+
+    protected override void DrawImGui(GameTime gameTime)
+    {
+        ImGui.Begin("Inspector");
+        ImGui.Text("hello");
+        ImGui.End();
+    }
+
+    protected override void DrawGame(GameTime gameTime)
+    {
+        Core.SpriteBatch.Begin();
+        foreach (var gameObject in _gameObjects) gameObject.Draw(gameTime, Core.SpriteBatch);
+        Core.SpriteBatch.End();
     }
 
     protected override void LoadAssets()
     {
         LoadAtlas("sprites", "Ast_SpritesSheet_atlas");
 
-        var ship = new Ship(GetAtlasRegion("sprites", "ship"));
+        var ship = new Ship(GetAtlasRegion("sprites", "ship"), GetAtlasRegion("sprites", "bullet"));
         _gameObjects.Add(ship);
     }
 
     public override void Update(GameTime gameTime)
     {
         foreach (var gameObject in _gameObjects) gameObject.Update(gameTime);
-        _gameObjects.RemoveAll(o => o is Entity entity && entity.IsExpired);
+        _gameObjects.RemoveAll(o => o is Entity { IsExpired: true });
 
         foreach (var entity in _pendingObjectsAdd) _gameObjects.Add(entity);
-
         _pendingObjectsAdd.Clear();
     }
 
@@ -49,8 +63,13 @@ public class GameplayScreen : BaseScreen
         base.Draw(gameTime);
     }
 
-    private void OnShoot(ShipShoot eventArgs)
+    private void OnShoot(Spawn eventArgs)
     {
-        _pendingObjectsAdd.Add(new Bullet(GetAtlasRegion("sprites", "bullet"), eventArgs.position, eventArgs.direction));
+        _pendingObjectsAdd.Add(eventArgs.Entity);
+    }
+
+    protected override void OnUnload()
+    {
+        Core.EventBus.Unlisten<Spawn>(OnShoot);
     }
 }
